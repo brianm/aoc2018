@@ -19,7 +19,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let t = freq_changes("1 \n2").unwrap();
-        assert_eq!(t, 3);
+        let t = freq_changes("1 \n2");
+        assert_eq!(t, Ok(3));
     }
 }

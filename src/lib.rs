@@ -1,4 +1,5 @@
 extern crate failure;
+extern crate spectral;
 
 pub mod one;
 

@@ -19,25 +19,18 @@ pub fn find_repeated_freq<S: Into<String>>(input: S) -> Result<i32> {
     let mut frequencies = HashSet::new();
     frequencies.insert(0);
     loop {
-        match changes
-            .clone()
-            .lines()
-            .map(|s| s.trim())
-            .filter(|s| s.len() != 0)
-            .map(|s| s.parse::<i32>().unwrap())
-            .find_map(|n| {
-                freq += n;
-                if frequencies.contains(&freq) {
-                    return Some(freq);
-                }
-                frequencies.insert(freq);
-                return None;
-            }) {
-            Some(found) => {
-                return Ok(found);
+        for n in changes.clone().lines() {
+            let n = n.trim();
+            if n.len() == 0 { // skip blank lines                
+                continue;
             }
-            None => {}
-        };
+            let n: i32 = n.parse()?;
+            freq += n;
+            if frequencies.contains(&freq) {
+                return Ok(freq);
+            }
+            frequencies.insert(freq);
+        }
     }
 }
 

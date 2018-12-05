@@ -21,7 +21,8 @@ pub fn find_repeated_freq<S: Into<String>>(input: S) -> Result<i32> {
     loop {
         for n in changes.clone().lines() {
             let n = n.trim();
-            if n.len() == 0 { // skip blank lines                
+            if n.len() == 0 {
+                // skip blank lines
                 continue;
             }
             let n: i32 = n.parse()?;

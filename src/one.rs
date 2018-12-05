@@ -1,11 +1,51 @@
 use failure::Error;
+use std::collections::HashSet;
 use std::string::String;
 
 type Result<T> = std::result::Result<T, Error>;
 
-pub fn part1() -> () {
-    let input = include_str!("day_1_input.txt");
-    println!("{}", freq_changes(input).unwrap());
+const FREQUENCY_CHANGES: &str = include_str!("day_1_input.txt");
+
+pub fn part2() -> Result<String> {
+    Ok(format!(
+        "Day 1, Part 2: {}",
+        find_repeated_freq(FREQUENCY_CHANGES)?
+    ))
+}
+
+pub fn find_repeated_freq<S: Into<String>>(input: S) -> Result<i32> {
+    let changes = input.into();
+    let mut freq = 0;
+    let mut frequencies = HashSet::new();
+    frequencies.insert(0);
+    loop {
+        match changes
+            .clone()
+            .lines()
+            .map(|s| s.trim())
+            .filter(|s| s.len() != 0)
+            .map(|s| s.parse::<i32>().unwrap())
+            .find_map(|n| {
+                freq += n;
+                if frequencies.contains(&freq) {
+                    return Some(freq);
+                }
+                frequencies.insert(freq);
+                return None;
+            }) {
+            Some(found) => {
+                return Ok(found);
+            }
+            None => {}
+        };
+    }
+}
+
+pub fn part1() -> Result<String> {
+    Ok(format!(
+        "Day 1, Part 1: {}",
+        freq_changes(FREQUENCY_CHANGES)?
+    ))
 }
 
 pub fn freq_changes<S: Into<String>>(input: S) -> Result<i32> {
@@ -19,12 +59,36 @@ pub fn freq_changes<S: Into<String>>(input: S) -> Result<i32> {
 
 #[cfg(test)]
 mod tests {
-    use super::freq_changes;
+    use super::*;
     use spectral::prelude::*;
 
     #[test]
-    fn it_works() {
+    fn part1() {
         let t = freq_changes("1 \n2\n");
         assert_that!(t).is_ok().is_equal_to(3);
+    }
+
+    #[test]
+    fn part2_1() {
+        let t = find_repeated_freq("+1, -1".replace(", ", "\n"));
+        assert_that!(t).is_ok().is_equal_to(0);
+    }
+
+    #[test]
+    fn part2_2() {
+        let t = find_repeated_freq("+3, +3, +4, -2, -4".replace(", ", "\n"));
+        assert_that!(t).is_ok().is_equal_to(10);
+    }
+
+    #[test]
+    fn part2_3() {
+        let t = find_repeated_freq("-6, +3, +8, +5, -6".replace(", ", "\n"));
+        assert_that!(t).is_ok().is_equal_to(5);
+    }
+
+    #[test]
+    fn part2_4() {
+        let t = find_repeated_freq("+7, +7, -2, -7, -4".replace(", ", "\n"));
+        assert_that!(t).is_ok().is_equal_to(14);
     }
 }

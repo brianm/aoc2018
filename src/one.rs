@@ -6,14 +6,20 @@ type Result<T> = std::result::Result<T, Error>;
 
 const FREQUENCY_CHANGES: &str = include_str!("day_1_input.txt");
 
-pub fn part2() -> Result<String> {
+pub fn run() -> Result<String> {
+    let r1 = part1()?;
+    let r2 = part2()?;
+    Ok(format!("{}\n{}", r1, r2))
+}
+
+fn part2() -> Result<String> {
     Ok(format!(
         "Day 1, Part 2: {}",
         find_repeated_freq(FREQUENCY_CHANGES)?
     ))
 }
 
-pub fn find_repeated_freq<S: Into<String>>(input: S) -> Result<i32> {
+fn find_repeated_freq<S: Into<String>>(input: S) -> Result<i32> {
     let changes = input.into();
     let mut freq = 0;
     let mut frequencies = HashSet::new();
@@ -35,14 +41,14 @@ pub fn find_repeated_freq<S: Into<String>>(input: S) -> Result<i32> {
     }
 }
 
-pub fn part1() -> Result<String> {
+fn part1() -> Result<String> {
     Ok(format!(
         "Day 1, Part 1: {}",
         freq_changes(FREQUENCY_CHANGES)?
     ))
 }
 
-pub fn freq_changes<S: Into<String>>(input: S) -> Result<i32> {
+fn freq_changes<S: Into<String>>(input: S) -> Result<i32> {
     let ins = input.into();
     ins.lines()
         .map(|s| s.trim())

@@ -1,13 +1,24 @@
 extern crate aoc2018;
-use aoc2018::one;
-use std::process;
+extern crate failure;
+#[macro_use]
+extern crate quicli;
 
-fn main() {
-    match one::part2() {
-        Ok(result) => println!("{}", result),
-        Err(e) => {
-            eprintln!("error: {}", e);
-            process::exit(1);
-        }
-    }
+use aoc2018::one;
+use failure::bail;
+use quicli::prelude::*;
+
+#[derive(Debug, StructOpt)]
+struct Cli {
+    day: String,
+
+    #[structopt(flatten)]
+    verbosity: Verbosity,
 }
+
+main!(|args: Cli, log_level: verbosity| match args.day.as_ref() {
+    "1" => println!("{}", one::run()?),
+    _ => bail!(
+        "pass the day to run as the first argument, ie, 1. Not '{}'",
+        args.day
+    ),
+});
